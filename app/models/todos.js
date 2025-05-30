@@ -12,12 +12,17 @@ export async function getTodoItems() {
 }
 
 export async function toggleIscompleted(id) {
-  return collection.updateOne(
-    { _id: ObjectId.createFromHexString(id) },
+  return collection.updateOne({ _id: ObjectId.createFromHexString(id) }, [
     {
       $set: {
-        isComplete: true,
+        isComplete: {
+          $cond: {
+            if: "$isComplete",
+            then: false,
+            else: true,
+          },
+        },
       },
-    }
-  );
+    },
+  ]);
 }

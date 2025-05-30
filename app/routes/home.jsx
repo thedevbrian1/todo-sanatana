@@ -1,4 +1,4 @@
-import { Form, useSubmit } from "react-router";
+import { Form, useNavigation, useSubmit } from "react-router";
 import { validateText } from "../.server/validation";
 import {
   createTodoItem,
@@ -67,9 +67,10 @@ export async function action({ request }) {
 }
 
 export default function Home({ actionData, loaderData }) {
-  console.log({ loaderData });
-
   let submit = useSubmit();
+  let navigation = useNavigation();
+
+  let isSubmitting = navigation.state !== "idle";
 
   // TODO: Clear form after submission
   return (
@@ -91,7 +92,11 @@ export default function Home({ actionData, loaderData }) {
         ) : null}
       </Form>
 
-      <ul className="bg-[#25273c] mt-8 p-4 rounded-lg space-y-4">
+      <ul
+        className={`bg-[#25273c] mt-8 p-4 rounded-lg space-y-4 ${
+          isSubmitting ? "opacity-50" : ""
+        }`}
+      >
         {loaderData.length === 0 ? (
           <p>No items yet</p>
         ) : (
